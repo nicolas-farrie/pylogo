@@ -5,7 +5,7 @@
 from sly import Lexer, Parser
 
 class CalcLexer(Lexer):
-    tokens = { NAME, NUMBER, PLUS, TIMES, MINUS, DIVIDE, ASSIGN, LPAREN, RPAREN }
+    tokens = { NAME, NUMBER, PLUS, TIMES, MINUS, DIVIDE, MODULO, ASSIGN, LPAREN, RPAREN }
     ignore = ' \t'
 
     # Tokens
@@ -17,6 +17,7 @@ class CalcLexer(Lexer):
     MINUS = r'-'
     TIMES = r'\*'
     DIVIDE = r'/'
+    MODULO = r'%'
     ASSIGN = r'='
     LPAREN = r'\('
     RPAREN = r'\)'
@@ -37,7 +38,7 @@ class CalcParser(Parser):
 
     precedence = (
         ('left', PLUS, MINUS),
-        ('left', TIMES, DIVIDE),
+        ('left', TIMES, DIVIDE, MODULO),
         ('right', UMINUS),
         )
 
@@ -67,6 +68,10 @@ class CalcParser(Parser):
     @_('expr DIVIDE expr')
     def expr(self, p):
         return p.expr0 / p.expr1
+    #rajout de test n°1
+    @_('expr MODULO expr')
+    def expr(self, p):
+        return p.expr0 % p.expr1
 
     @_('MINUS expr %prec UMINUS')
     def expr(self, p):
@@ -96,4 +101,5 @@ if __name__ == '__main__':
             text = input('calc > ')
         except EOFError:
             break
+        if text:
             parser.parse(lexer.tokenize(text))
