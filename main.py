@@ -96,4 +96,5 @@ if __name__ == '__main__':
             text = input('calc > ')
         except EOFError:
             break
+        if text:
             parser.parse(lexer.tokenize(text))
